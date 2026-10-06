@@ -8,7 +8,7 @@ Project sederhana untuk tugas PHP dan JavaScript:
 
 ## Form tambah produk (PHP)
 
-Halaman `tambah_produk.php` menerima nama, harga, deskripsi, kategori, dan foto. Data produk disimpan menggunakan prepared statement.
+Halaman `tambah_produk.php` menerima nama, harga, deskripsi, kategori, dan foto. Data produk disimpan menggunakan prepared statement. Dashboard menyediakan edit dan hapus produk; halaman `keranjang.php` menyimpan item serta kuantitas dalam sesi browser.
 
 Form produk juga mewajibkan foto JPG, PNG, atau WebP maksimal 3 MB. File foto disimpan di `uploads/products` dan ditampilkan pada dashboard. Jika PHP menolak file sebelum validasi aplikasi, atur `upload_max_filesize` menjadi minimal `3M` dan `post_max_size` menjadi minimal `4M` di `php.ini`, lalu restart Apache.
 
@@ -28,11 +28,14 @@ Koneksi bawaan di `config.php` memakai host `127.0.0.1`, database `ecommerce`, u
 
 e-commerce/
 ├── config.php
+├── helpers.php
 ├── index.php
 ├── tambah_produk.php
+├── edit_produk.php
+├── hapus_produk.php
+├── keranjang.php
 ├── migrasi_kategori_produk.sql
 ├── style.css
-├── script.js
 ├── README.txt
 └── images/
 

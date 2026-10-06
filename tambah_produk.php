@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/helpers.php';
+
 $namaProduk = '';
 $harga = '';
 $deskripsi = '';
@@ -21,7 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deskripsi = trim($_POST['deskripsi'] ?? '');
     $kategoriDipilih = trim($_POST['kategori'] ?? '');
 
-    if ($namaProduk === '' || $harga === '' || $deskripsi === '' || $kategoriDipilih === '') {
+    if (!csrf_valid()) {
+        $pesanError = 'Sesi formulir tidak valid. Muat ulang halaman lalu coba lagi.';
+    } elseif ($namaProduk === '' || $harga === '' || $deskripsi === '' || $kategoriDipilih === '') {
         $pesanError = 'Nama, harga, deskripsi, dan kategori wajib diisi.';
     } elseif (!in_array($kategoriDipilih, $daftarKategori, true)) {
         $pesanError = 'Kategori produk tidak valid.';
@@ -90,10 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-function aman(string $nilai): string
-{
-    return htmlspecialchars($nilai, ENT_QUOTES, 'UTF-8');
-}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -120,6 +120,7 @@ function aman(string $nilai): string
             <?php endif; ?>
 
             <form class="product-form" method="post" action="tambah_produk.php" enctype="multipart/form-data" id="form-produk">
+                <input type="hidden" name="token_csrf" value="<?= aman(token_csrf()) ?>">
                 <label for="nama_produk">
                     Nama produk
                     <input id="nama_produk" name="nama_produk" type="text" maxlength="100" required value="<?= aman($namaProduk) ?>">
