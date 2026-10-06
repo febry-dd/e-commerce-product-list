@@ -129,6 +129,42 @@ main {
     margin-bottom: 15px;
 }
 
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-form label {
+    font-weight: 600;
+}
+
+.filter-form select,
+.filter-form button {
+    min-height: 42px;
+    padding: 9px 12px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font: inherit;
+}
+
+.filter-form button {
+    border-color: #222;
+    background-color: #222;
+    color: white;
+    cursor: pointer;
+}
+
+.filter-form button:hover {
+    background-color: #444;
+}
+
+.empty-products {
+    padding: 18px 0;
+    color: #666;
+}
+
 .filter-buttons {
     display: flex;
     gap: 10px;

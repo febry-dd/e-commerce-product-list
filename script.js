@@ -135,7 +135,7 @@ fetch("produk_api.php")
                 price: Number(product.harga),
                 description: product.deskripsi || "",
                 image: product.gambar || "",
-                category: "Produk Baru"
+                category: product.kategori || "Produk Baru"
             };
         });
 

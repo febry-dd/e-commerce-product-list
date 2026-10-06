@@ -46,6 +46,7 @@ CREATE TABLE `products` (
   `nama_produk` varchar(100) NOT NULL,
   `harga` decimal(15,2) NOT NULL,
   `deskripsi` text,
+  `kategori` varchar(50) NOT NULL DEFAULT 'Produk Baru',
   `stok` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

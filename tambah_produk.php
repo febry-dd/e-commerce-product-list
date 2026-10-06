@@ -2,6 +2,7 @@
 $namaProduk = '';
 $harga = '';
 $deskripsi = '';
+$kategoriDipilih = '';
 $pesanError = '';
 $pesanSukses = '';
 $ukuranMaksimumGambar = 3 * 1024 * 1024;
@@ -12,14 +13,18 @@ $tipeGambarDiizinkan = [
 ];
 $fileGambar = $_FILES['gambar'] ?? null;
 $ekstensiGambar = '';
+$daftarKategori = ['Elektronik', 'Fashion', 'Aksesoris'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $namaProduk = trim($_POST['nama_produk'] ?? '');
     $harga = trim($_POST['harga'] ?? '');
     $deskripsi = trim($_POST['deskripsi'] ?? '');
+    $kategoriDipilih = trim($_POST['kategori'] ?? '');
 
-    if ($namaProduk === '' || $harga === '' || $deskripsi === '') {
-        $pesanError = 'Nama, harga, dan deskripsi wajib diisi.';
+    if ($namaProduk === '' || $harga === '' || $deskripsi === '' || $kategoriDipilih === '') {
+        $pesanError = 'Nama, harga, deskripsi, dan kategori wajib diisi.';
+    } elseif (!in_array($kategoriDipilih, $daftarKategori, true)) {
+        $pesanError = 'Kategori produk tidak valid.';
     } elseif (!is_numeric($harga) || (float) $harga <= 0) {
         $pesanError = 'Harga harus berupa angka lebih besar dari nol.';
     } elseif ($fileGambar === null || $fileGambar['error'] === UPLOAD_ERR_NO_FILE) {
@@ -43,21 +48,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $lokasiGambarTersimpan = '';
 
         try {
-            $koneksi = new PDO(
-                'mysql:host=127.0.0.1;dbname=ecommerce;charset=utf8mb4',
-                'root',
-                '',
-                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-            );
+            require_once __DIR__ . '/config.php';
 
             $koneksi->beginTransaction();
             $pernyataan = $koneksi->prepare(
-                'INSERT INTO products (nama_produk, harga, deskripsi) VALUES (:nama_produk, :harga, :deskripsi)'
+                'INSERT INTO products (nama_produk, harga, deskripsi, kategori) VALUES (:nama_produk, :harga, :deskripsi, :kategori)'
             );
             $pernyataan->execute([
                 ':nama_produk' => $namaProduk,
                 ':harga' => $harga,
                 ':deskripsi' => $deskripsi,
+                ':kategori' => $kategoriDipilih,
             ]);
 
             $direktoriGambar = __DIR__ . '/uploads/products';
@@ -76,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $namaProduk = '';
             $harga = '';
             $deskripsi = '';
+            $kategoriDipilih = '';
         } catch (Throwable $kesalahan) {
             if ($koneksi instanceof PDO && $koneksi->inTransaction()) {
                 $koneksi->rollBack();
@@ -133,6 +135,18 @@ function aman(string $nilai): string
                     <textarea id="deskripsi" name="deskripsi" required><?= aman($deskripsi) ?></textarea>
                 </label>
 
+                <label for="kategori">
+                    Kategori
+                    <select id="kategori" name="kategori" required>
+                        <option value="">Pilih kategori</option>
+                        <?php foreach ($daftarKategori as $kategori): ?>
+                            <option value="<?= aman($kategori) ?>" <?= $kategoriDipilih === $kategori ? 'selected' : '' ?>>
+                                <?= aman($kategori) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+
                 <label for="gambar">
                     Foto produk (JPG, PNG, atau WebP; maksimal 3 MB)
                     <input id="gambar" name="gambar" type="file" accept="image/jpeg,image/png,image/webp" required>
@@ -143,7 +157,7 @@ function aman(string $nilai): string
             </form>
         </section>
 
-        <a class="back-link" href="index.html">Kembali ke daftar produk</a>
+        <a class="back-link" href="index.php">Kembali ke daftar produk</a>
     </main>
     <script>
         const formProduk = document.getElementById('form-produk');

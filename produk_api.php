@@ -2,15 +2,10 @@
 header('Content-Type: application/json; charset=utf-8');
 
 try {
-    $koneksi = new PDO(
-        'mysql:host=127.0.0.1;dbname=ecommerce;charset=utf8mb4',
-        'root',
-        '',
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-    );
+    require_once __DIR__ . '/config.php';
 
     $pernyataan = $koneksi->query(
-        'SELECT id, nama_produk, harga, deskripsi FROM products ORDER BY id DESC'
+        'SELECT id, nama_produk, harga, deskripsi, kategori FROM products ORDER BY id DESC'
     );
 
     $produk = $pernyataan->fetchAll(PDO::FETCH_ASSOC);
