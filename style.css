@@ -27,6 +27,97 @@ main {
     margin: 30px auto;
 }
 
+.manage-products {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.manage-products h2 {
+    font-size: 22px;
+}
+
+.add-product-link,
+.product-form button {
+    display: inline-block;
+    padding: 11px 18px;
+    border: 0;
+    border-radius: 6px;
+    background-color: #222;
+    color: white;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.add-product-link:hover,
+.product-form button:hover {
+    background-color: #444;
+}
+
+.form-page {
+    max-width: 720px;
+}
+
+.form-panel {
+    padding: 24px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+.form-panel h2 {
+    margin-bottom: 20px;
+}
+
+.product-form {
+    display: grid;
+    gap: 16px;
+}
+
+.product-form label {
+    display: grid;
+    gap: 7px;
+    font-weight: 600;
+}
+
+.product-form input,
+.product-form textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font: inherit;
+}
+
+.product-form textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+.form-message {
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 5px;
+}
+
+.form-message.error {
+    background-color: #fde8e8;
+    color: #8a1c1c;
+}
+
+.form-message.success {
+    background-color: #e5f5e9;
+    color: #205c30;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 18px;
+    color: #222;
+}
+
 .filter-section {
     background-color: white;
     padding: 20px;
@@ -85,6 +176,16 @@ main section > h2 {
     object-fit: cover;
 }
 
+.product-image-placeholder {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 200px;
+    background-color: #e8ecef;
+    color: #555;
+    font-size: 15px;
+}
+
 .product-content {
     padding: 15px;
 }
@@ -120,6 +221,11 @@ main section > h2 {
 }
 
 @media (max-width: 600px) {
+    .manage-products {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
     .product-container {
         grid-template-columns: 1fr;
     }

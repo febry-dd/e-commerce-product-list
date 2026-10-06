@@ -59,6 +59,18 @@ function formatPrice(price) {
     }).format(price);
 }
 
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, function(character) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[character];
+    });
+}
+
 // ==========================================
 // MENAMPILKAN PRODUK
 // ==========================================
@@ -69,13 +81,16 @@ function displayProducts(productList) {
     productContainer.innerHTML = "";
 
     productList.forEach(function(product) {
+        const gambarProduk = product.image
+            ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}">`
+            : '<div class="product-image-placeholder" aria-hidden="true">Produk baru</div>';
         const productCard = `
             <div class="product-card">
-                <img src="${product.image}" alt="${product.name}">
+                ${gambarProduk}
                 <div class="product-content">
-                    <div class="product-category">${product.category}</div>
-                    <h3 class="product-name">${product.name}</h3>
-                    <p class="product-description">${product.description}</p>
+                    <div class="product-category">${escapeHtml(product.category)}</div>
+                    <h3 class="product-name">${escapeHtml(product.name)}</h3>
+                    <p class="product-description">${escapeHtml(product.description)}</p>
                     <div class="product-price">${formatPrice(product.price)}</div>
                 </div>
             </div>
@@ -104,3 +119,29 @@ function filterProducts(category) {
 
 // Tampilkan semua produk saat halaman dibuka
 displayProducts(products);
+
+fetch("produk_api.php")
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error("Produk database tidak dapat dimuat.");
+        }
+
+        return response.json();
+    })
+    .then(function(databaseProducts) {
+        const productsFromDatabase = databaseProducts.map(function(product) {
+            return {
+                name: product.nama_produk,
+                price: Number(product.harga),
+                description: product.deskripsi || "",
+                image: product.gambar || "",
+                category: "Produk Baru"
+            };
+        });
+
+        products.push(...productsFromDatabase);
+        displayProducts(products);
+    })
+    .catch(function(error) {
+        console.error(error);
+    });
